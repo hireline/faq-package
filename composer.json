@@ -1,11 +1,11 @@
 {
-    "name": "jaopmx/faq-package",
+    "name": "empleos-en-linea/faq-package",
     "description": "Simple FAQ package including tables, controllers, models and basic views",
     "license": "MIT",
     "authors": [
         {
-            "name": "Antonio Oropeza",
-            "email": "jaop.7@outlook.com"
+            "name": "Empleos en linea",
+            "email": "webmaster@empleosti.com.mx"
         }
     ],
     "require": {
