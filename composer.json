@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "laravel/scout": "^5.0"
+        "laravel/scout": "*"
     },
     "require-dev": {
         "orchestra/testbench-browser-kit": "^4.0",
