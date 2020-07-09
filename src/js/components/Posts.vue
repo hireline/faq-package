@@ -69,14 +69,14 @@
                 </div>
 	        </div>
         </div>
-        <ais-configure :query="initialQuery"/>
+        <ais-configure :query="initialQuery" :facet-filters="roles"/>
     </ais-instant-search>
 </template>
 
 <script>
     import algoliasearch from 'algoliasearch/lite';
     export default {
-        props: ['initial-query', 'algolia-id', 'algolia-search'],
+        props: ['initial-query', 'roles', 'algolia-id', 'algolia-search'],
         data() {
             return {
                 searchClient: algoliasearch(

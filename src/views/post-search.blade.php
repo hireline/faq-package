@@ -12,6 +12,7 @@
 @section('content')
     <div id="posts">
         <posts initial-query="{{ $query }}"
+                roles="{{$roles}}"
                 algolia-id="{{ $algolia_id }}"
                 algolia-search="{{ $algolia_search }}">
         </posts>

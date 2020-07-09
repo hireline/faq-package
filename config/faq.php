@@ -25,4 +25,6 @@ return [
     */
 
     'admin_middleware' => 'web',
+
+    'roles' => ['recruiter', 'candidate']
 ];

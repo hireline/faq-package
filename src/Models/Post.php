@@ -13,7 +13,8 @@ class Post extends Model
     use Searchable;
 
     protected $table = 'faq_posts';
-    protected $fillable = ['title', 'body', 'active', 'slug'];
+    protected $fillable = ['title', 'body', 'active', 'slug', 'roles'];
+    protected $casts = ['roles' => 'array'];
 
     public function searchableAs()
     {
@@ -41,6 +42,7 @@ class Post extends Model
         $array['title'] = $this->title;
         $array['body'] = $this->clear_body;
         $array['active'] = $this->active;
+        $array['roles'] = $this->roles;
         $array['url'] = route('posts.show', ['slug' => $this->slug]);
 
         return $array;

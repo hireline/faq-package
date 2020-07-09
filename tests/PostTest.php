@@ -25,11 +25,13 @@ class PostTest extends TestCase
             ->type('Testing post', 'title')
             ->select($category->id, 'category')
             ->type('Test text from post', 'body')
+            ->select(['candidate', 'recruiter'], 'roles')
             ->press('Guardar');
 
         $this->seeInDatabase('faq_posts', [
             'title' => 'Testing post',
-            'body' => 'Test text from post'
+            'body' => 'Test text from post',
+            'roles' => '["candidate","recruiter"]'
         ]);
 
         $this->seeInDatabase('faq_category_post',[
@@ -90,13 +92,14 @@ class PostTest extends TestCase
      */
     public function it_tests_i_can_make_a_search()
     {
+        $this->withoutExceptionHandling();
         $category = factory(Category::class)->create();
         $post = factory(Post::class)->create();
 
-        $this->visit('faq/')
+        $this->visit('faq')
             ->type('Busqueda chida', 'q');
 
-        $response = $this->GET('faq/search?q=ostias')
+        $response = $this->GET('faq/search?roles=recruiter,candidate')
             ->assertResponseOk();
     }
 }

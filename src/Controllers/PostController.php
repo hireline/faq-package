@@ -119,9 +119,11 @@ class PostController extends Controller
         $query = $request->get('q', '');
         $algolia_id = config('scout.algolia.id');
         $algolia_search = config('scout.algolia.search');
-        
+        $roles = json_encode(array_map(function ($role){return 'roles: '.$role;}, explode(',',request('roles'))));
+
         return view()->first(['faq.post-search', 'FaqPackage::post-search'], array(
             'query' => $query,
+            'roles' => $roles,
             'algolia_id' => $algolia_id,
             'algolia_search' => $algolia_search
         ));
