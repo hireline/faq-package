@@ -1,11 +1,11 @@
 {
-    "name": "jaopmx/faq-package",
+    "name": "magros/faq-package",
     "description": "Simple FAQ package including tables, controllers, models and basic views",
     "license": "MIT",
     "authors": [
         {
-            "name": "Antonio Oropeza",
-            "email": "jaop.7@outlook.com"
+            "name": "Marco Godinez",
+            "email": "iron-rocks@hotmail.com"
         }
     ],
     "require": {
