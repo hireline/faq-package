@@ -121,18 +121,18 @@ class PostController extends Controller
 //        $algolia_search = config('scout.algolia.search');
 //        $posts = Post::search($query);
 
-        return view()->first(['faq.post-search', 'FaqPackage::post-search'], compact('posts'));
+        return view()->first(['faq.post-search', 'FaqPackage::post-search'], compact('posts'))->render;
     }
 
     public function searchPartial()
     {
         $posts = Post::search(request('q'))->get();
-        
+
         $roles = json_encode(array_map(function ($role) {
             return 'roles: ' . $role;
         }, explode(',', request('roles'))));
 
-        $view = view('FaqPackage::_search', compact('posts'))->render();
+        $view = view()->first(['faq.post-search-results', 'FaqPackage::_search'], compact('posts'))->render();
         return ['src' => $view];
     }
 }
