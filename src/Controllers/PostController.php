@@ -121,7 +121,7 @@ class PostController extends Controller
 //        $algolia_search = config('scout.algolia.search');
 //        $posts = Post::search($query);
 
-        return view()->first(['faq.post-search', 'FaqPackage::post-search'], compact('posts'))->render;
+        return view()->first(['faq.post-search', 'FaqPackage::post-search'], compact('posts'));
     }
 
     public function searchPartial()

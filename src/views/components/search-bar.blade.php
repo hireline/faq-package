@@ -9,7 +9,7 @@
             <div class="input-field search">
                 <span id="search" class="material-icons">search</span>
                 {{-- <span class="fas fa-search"></span> --}}
-                <input id="query" type="text" name="q" placeholder="Busca respuestas..." autocomplete="off" autofocus style="height:4rem;">
+                <input id="query" type="text" name="q" value="{{request('q')}}" placeholder="Busca respuestas..." autocomplete="off" autofocus style="height:4rem;">
             </div>
         </form>
     </div>
