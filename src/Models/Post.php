@@ -43,7 +43,7 @@ class Post extends Model
         $array['body'] = $this->clear_body;
         $array['active'] = $this->active;
         $array['roles'] = $this->roles;
-        $array['url'] = route('posts.show', ['slug' => $this->slug]);
+        $array['url'] = $this->url;
 
         return $array;
     }
@@ -51,6 +51,11 @@ class Post extends Model
     public function author()
     {
         return $this->morphTo();
+    }
+
+    public function getUrlAttribute()
+    {
+        return route('posts.show', ['slug' => $this->slug]);
     }
 
     public function categories()

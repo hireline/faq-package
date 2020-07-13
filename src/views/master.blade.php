@@ -83,6 +83,20 @@
         background-color: rgba(68, 68, 68, 0.20);
         outline: none;
       }
+       td {
+         padding: 15px;
+       }
+
+      tr {
+        -webkit-transition: background-color .25s ease;
+        transition: background-color .25s ease;
+      }
+
+      .post-title {
+        color: #00abc6;
+        font-size: 1.3rem;
+        margin-block-start: 0em;
+      }
     </style>
     @section('head-styles')            
     @show

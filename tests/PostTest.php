@@ -102,4 +102,15 @@ class PostTest extends TestCase
         $response = $this->GET('faq/search?roles=recruiter,candidate')
             ->assertResponseOk();
     }
+
+    /**
+     * @test
+     */
+    public function it_tests_i_can_make_a_search_with_partial()
+    {
+        $this->withoutExceptionHandling();
+
+        $response = $this->GET('faq/partials/search?roles=recruiter,candidate')
+            ->assertResponseOk();
+    }
 }

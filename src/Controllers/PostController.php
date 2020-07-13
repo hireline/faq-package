@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -20,10 +20,10 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        if ($user) {            
+        if ($user) {
             $posts = $user->posts()->with('author')->get();
             return view('FaqPackage::index', compact('posts'));
-        }else{
+        } else {
             return redirect()->back()->withErrors('You are not logged in!');
         }
     }
@@ -43,23 +43,23 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $user = $request->user();
-        if($user){
+        if ($user) {
             $data = $request->all();
             $data['active'] = 1;
-            if ($user){
+            if ($user) {
                 $data['slug'] = Str::slug($data['title']);
                 $post = $user->posts()->create($data);
                 $post->categories()->attach($request->get('category'));
                 return redirect()->route('dashboard')->withSuccess('¡Artículo creado exitosamente!');
             }
-            return redirect()->route('dashboard')->with('error','Ha ocurrido un error al crear el artículo');
-        }else{
+            return redirect()->route('dashboard')->with('error', 'Ha ocurrido un error al crear el artículo');
+        } else {
             return redirect()->back()->withErrors('You are not logged in!');
         }
     }
@@ -84,13 +84,13 @@ class PostController extends Controller
     {
         $post = Post::find($post_id);
         $data = $request->all();
-        if($post){
+        if ($post) {
             $data['slug'] = Str::slug($data['title']);
             $post->update($data);
             $post->categories()->detach();
             $post->categories()->attach($data['category']);
             return redirect()->route('dashboard')->withSuccess('¡Artículo actualizado exitosamente!');
-        }else{
+        } else {
             return redirect()->route('dashboard')->with('error', 'Post no encontrado');
         }
     }
@@ -98,11 +98,11 @@ class PostController extends Controller
     public function toggle(Request $request)
     {
         $post = Post::find($request->get('post_id'));
-        if($post){
+        if ($post) {
             $post->active = !$post->active;
             $post->update();
             return redirect()->route('dashboard')->with('success', '¡Post modificado exitosamente!');
-        }else{
+        } else {
             return redirect()->route('dashboard')->with('error', 'Ha ocurrido un error al modificar el post');
         }
     }
@@ -116,16 +116,23 @@ class PostController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->get('q', '');
-        $algolia_id = config('scout.algolia.id');
-        $algolia_search = config('scout.algolia.search');
-        $roles = json_encode(array_map(function ($role){return 'roles: '.$role;}, explode(',',request('roles'))));
+//        $query = $request->get('q', '');
+//        $algolia_id = config('scout.algolia.id');
+//        $algolia_search = config('scout.algolia.search');
+//        $posts = Post::search($query);
 
-        return view()->first(['faq.post-search', 'FaqPackage::post-search'], array(
-            'query' => $query,
-            'roles' => $roles,
-            'algolia_id' => $algolia_id,
-            'algolia_search' => $algolia_search
-        ));
+        return view()->first(['faq.post-search', 'FaqPackage::post-search'], compact('posts'));
+    }
+
+    public function searchPartial()
+    {
+        $posts = Post::search(request('q'))->get();
+        
+        $roles = json_encode(array_map(function ($role) {
+            return 'roles: ' . $role;
+        }, explode(',', request('roles'))));
+
+        $view = view('FaqPackage::_search', compact('posts'))->render();
+        return ['src' => $view];
     }
 }
