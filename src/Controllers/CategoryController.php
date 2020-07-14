@@ -82,6 +82,9 @@ class CategoryController extends Controller
     public function show($slug)
     {
         $category = Category::with(['posts' => function ($query) {
+            if(session()->has('faq-role')){
+                $query->where('roles', 'like', '%'.session()->get('faq-role').'%');
+            }
             $query->where('active', 1);
         }])->where('slug', $slug)->first();
 

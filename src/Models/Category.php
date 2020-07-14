@@ -17,7 +17,11 @@ class Category extends Model
 
     public function getActivePostsAttribute()
     {
-	    return $this->posts()->where('active', 1)->count();
+        $q = $this->posts()->where('active', 1);
+        if(session()->has('faq-role')){
+            $q->where('roles', 'like', '%'.session()->get('faq-role').'%');
+        }
+        return $q->count();
     }
 
     public function getTotalPostAttribute()
