@@ -61,10 +61,11 @@ class CategoryTest extends TestCase
     public function it_tests_i_can_list_all_my_categories_and_go_to_one_of_my_posts()
     {
         $category = factory(Category::class)->create();
-        $post = factory(Post::class)->create();
+        $post = factory(Post::class)->create(['roles' => 'recruiter']);
         $post->categories()->attach($category->id);
+        session()->put('faq-role', 'recruiter');
 
-        $this->visit('faq/')
+        $this->visit('faq')
             ->see($category->name)
             ->click('#show-category-'.$category->id)
             ->see($post->title)

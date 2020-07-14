@@ -10,9 +10,20 @@ use Illuminate\Routing\Controller;
 
 class CategoryController extends Controller
 {
+
     public function all()
     {
-        $categories = Category::all();
+        if (session()->has('faq-role')) {
+            $role = session()->get('faq-role');
+
+            $categories = Category::whereHas('posts', function ($q) use ($role) {
+                $q->where('roles', 'like', '%'.$role.'%');
+            })->get();
+
+        } else {
+            $categories = Category::all();
+        }
+
         return view()->first(['faq.categories-all', 'FaqPackage::categories-all'])->with('categories', $categories);
     }
 
@@ -25,45 +36,45 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),
-                ['name' => 'required|unique:faq_categories',
-                 'description' => 'required'], 
-                ['required' => 'El campo :attribute es requerido.', 'unique' => 'El nombre no puede estar repetido.']
-            );
+            ['name' => 'required|unique:faq_categories',
+                'description' => 'required'],
+            ['required' => 'El campo :attribute es requerido.', 'unique' => 'El nombre no puede estar repetido.']
+        );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return redirect()->route('categories.index')->withErrors($validator);
-        }else{
+        } else {
             $data = $request->all();
             $data['slug'] = Str::slug($data['name']);
             $category = Category::create($data);
-            return redirect()->route('categories.index')->withSuccess('¡Categoría '.$category->name.' creada exitosamente!');
+            return redirect()->route('categories.index')->withSuccess('¡Categoría ' . $category->name . ' creada exitosamente!');
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
         $category_id = $request->get('category_id', 0);
         $data = [];
-        if($category_id){
+        if ($category_id) {
             $category = Category::find($request->get('category_id'));
             $data['name'] = $request->get('name');
             $data['description'] = $request->get('description');
             $data['slug'] = Str::slug($data['name']);
             $category->update($data);
             return redirect()->route('categories.index')->withSuccess('¡Categoría actualizada exitosamente!');
-        }else{
+        } else {
             return redirect()->route('categories.index')->with('error', 'No se ha podido actualizar la categoría');
         }
     }

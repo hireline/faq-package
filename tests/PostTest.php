@@ -11,14 +11,14 @@ class PostTest extends TestCase
 {
     use RefreshDatabase, WithoutMiddleware;
 
-	/**
+    /**
      * @test
      */
     public function it_tests_i_can_create_a_post()
     {
         $category = factory(Category::class)->create();
         $user = factory(User::class)->create();
-        
+
         $this->actingAs($user)
             ->visit('faq/posts/create')
             ->see('Creando post')
@@ -34,7 +34,7 @@ class PostTest extends TestCase
             'roles' => '["candidate","recruiter"]'
         ]);
 
-        $this->seeInDatabase('faq_category_post',[
+        $this->seeInDatabase('faq_category_post', [
             'category_id' => $category->id,
         ]);
     }
@@ -50,19 +50,19 @@ class PostTest extends TestCase
         $post = createPost($user, $category->id);
 
         $this->actingAs($user)
-            ->visit('faq/posts/edit/'.$post->id)
+            ->visit('faq/posts/edit/' . $post->id)
             ->see('Editando post')
             ->type('Nuevo titulo', 'title')
             ->select($category2->id, 'category')
             ->type('Nuevo testo', 'body')
             ->press('Guardar');
-            
+
         $this->seeInDatabase('faq_posts', [
             'title' => 'Nuevo titulo',
             'body' => 'Nuevo testo'
         ]);
 
-        $this->seeInDatabase('faq_category_post',[
+        $this->seeInDatabase('faq_category_post', [
             'category_id' => $category2->id,
         ]);
     }
@@ -79,8 +79,8 @@ class PostTest extends TestCase
         $this->actingAs($user)
             ->visit('faq/posts')
             ->see($post->title)
-            ->click('deactivate-post-'.$post->id);
-            
+            ->click('deactivate-post-' . $post->id);
+
         $this->seeInDatabase('faq_posts', [
             'id' => $post->id,
             'active' => 0
@@ -95,12 +95,7 @@ class PostTest extends TestCase
         $this->withoutExceptionHandling();
         $category = factory(Category::class)->create();
         $post = factory(Post::class)->create();
-
-        $this->visit('faq')
-            ->type('Busqueda chida', 'q');
-
-        $response = $this->GET('faq/search?roles=recruiter,candidate')
-            ->assertResponseOk();
+        $this->GET('faq/search')->assertResponseOk();
     }
 
     /**
@@ -109,8 +104,10 @@ class PostTest extends TestCase
     public function it_tests_i_can_make_a_search_with_partial()
     {
         $this->withoutExceptionHandling();
+        $post = factory(Post::class)->create();
 
-        $response = $this->GET('faq/partials/search?roles=recruiter,candidate')
-            ->assertResponseOk();
+        session()->put('faq-role', 'recruiter');
+
+        $this->GET('faq/partials/search')->assertResponseOk();
     }
 }

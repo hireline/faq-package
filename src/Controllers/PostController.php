@@ -2,6 +2,7 @@
 
 namespace JaopMX\FaqPackage\Controllers;
 
+use Algolia\AlgoliaSearch\SearchIndex;
 use JaopMX\FaqPackage\Models\Post;
 use JaopMX\FaqPackage\Models\Category;
 use Illuminate\Support\Str;
@@ -126,13 +127,17 @@ class PostController extends Controller
 
     public function searchPartial()
     {
-        $posts = Post::search(request('q'))->get();
+        $faqRole = session()->has('faq-role') ? session()->get('faq-role') : null;
 
-        $roles = json_encode(array_map(function ($role) {
-            return 'roles: ' . $role;
-        }, explode(',', request('roles'))));
+        $posts = Post::search(request('q'), function (SearchIndex $algolia, string $query, array $options) use ($faqRole) {
+            if ($faqRole) {
+                $options['filters'] = 'roles:' . $faqRole;
+            }
+            return $algolia->search($query, $options);
+        })->get();
 
         $view = view()->first(['faq.post-search-results', 'FaqPackage::_search'], compact('posts'))->render();
+
         return ['src' => $view];
     }
 }
