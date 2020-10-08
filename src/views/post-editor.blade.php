@@ -23,11 +23,11 @@
                     </select>
                     <label>Categoría del artículo</label>
                 </div>
-                @if(count(config('faq.roles')))
+                @if(count($postForRole))
                 <div class="input-field col s6">
                     <select name="roles[]" id="roles" multiple="multiple">
                         <option value="" disabled selected>Elige una opción</option>
-                        @foreach(config('faq.roles') as $role)
+                        @foreach($postForRole as $role)
                             <option value="{{ $role }}" @if( isset($post->roles[$role]) ) {{ 'selected' }} @endif>{{ $role }}</option>
                         @endforeach
                     </select>
