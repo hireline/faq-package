@@ -34,14 +34,14 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::all();
         $post = new Post();
         
         $postForRole = [];
-        
-        Auth::user()->roles->each(function($role) use ($postForRole){
+        $user = $request->user();
+        $user->roles->each(function($role) use ($postForRole) {
             $postForRole = array_merge($postForRole, config("faq.role_can_create_posts_for_role.$role->name"));
         });
         
