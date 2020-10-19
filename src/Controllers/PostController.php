@@ -38,13 +38,9 @@ class PostController extends Controller
     {
         $categories = Category::all();
         $post = new Post();
-        
-        $postForRole = [];
-        $user = $request->user();
-        $user->roles->each(function($role) use ($postForRole) {
-            $postForRole = array_merge($postForRole, config("faq.role_can_create_posts_for_role.$role->name"));
-        });
-        
+    
+        $postForRole = $this->getAllowedRolesToCreatePosts($request);
+    
         return view('FaqPackage::post-editor', compact('post', 'categories', 'postForRole'));
     }
 
@@ -71,21 +67,19 @@ class PostController extends Controller
             return redirect()->back()->withErrors('You are not logged in!');
         }
     }
-
+    
     /**
      * Show the form for editing the specified resource.
+     * @param Request $request
+     * @param $post_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($post_id)
+    public function edit(Request $request,$post_id)
     {
         $post = Post::find($post_id);
         $categories = Category::all();
     
-        $postForRole = [];
-    
-        Auth::user()->roles->each(function($role) use ($postForRole){
-            $postForRole = array_merge($postForRole, config("faq.role_can_create_posts_for_role.$role->name"));
-        });
+        $postForRole = $this->getAllowedRolesToCreatePosts($request);
 
         return view('FaqPackage::post-editor', compact('categories', 'post', 'postForRole'));
     }
@@ -152,5 +146,22 @@ class PostController extends Controller
         $view = view()->first(['faq.post-search-results', 'FaqPackage::_search'], compact('posts'))->render();
 
         return ['src' => $view];
+    }
+    
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function getAllowedRolesToCreatePosts(Request $request)
+    {
+        $postForRole = [];
+        $user = $request->user();
+        $user->roles->each(function($role) use ($postForRole) {
+            if(config("faq.role_can_create_posts_for_role.$role->name")) {
+                $postForRole = array_merge($postForRole, config("faq.role_can_create_posts_for_role.$role->name"));
+            }
+        });
+        
+        return array_unique($postForRole);
     }
 }
