@@ -34,11 +34,18 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::all();
         $post = new Post();
-        return view('FaqPackage::post-editor', compact('post', 'categories'));
+        
+        $postForRole = [];
+        $user = $request->user();
+        $user->roles->each(function($role) use ($postForRole) {
+            $postForRole = array_merge($postForRole, config("faq.role_can_create_posts_for_role.$role->name"));
+        });
+        
+        return view('FaqPackage::post-editor', compact('post', 'categories', 'postForRole'));
     }
 
     /**
@@ -73,8 +80,14 @@ class PostController extends Controller
     {
         $post = Post::find($post_id);
         $categories = Category::all();
+    
+        $postForRole = [];
+    
+        Auth::user()->roles->each(function($role) use ($postForRole){
+            $postForRole = array_merge($postForRole, config("faq.role_can_create_posts_for_role.$role->name"));
+        });
 
-        return view('FaqPackage::post-editor', compact('categories', 'post'));
+        return view('FaqPackage::post-editor', compact('categories', 'post', 'postForRole'));
     }
 
     /**
