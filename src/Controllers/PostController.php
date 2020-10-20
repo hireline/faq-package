@@ -156,11 +156,12 @@ class PostController extends Controller
     {
         $postForRole = [];
         $user = $request->user();
-        $user->roles->each(function($role) use ($postForRole) {
+    
+        foreach($user->roles as $role) {
             if(config("faq.role_can_create_posts_for_role.$role->name")) {
                 $postForRole = array_merge($postForRole, config("faq.role_can_create_posts_for_role.$role->name"));
             }
-        });
+        };
         
         return array_unique($postForRole);
     }
