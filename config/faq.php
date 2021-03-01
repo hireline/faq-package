@@ -26,5 +26,9 @@ return [
 
     'admin_middleware' => 'web',
 
-    'roles' => ['recruiter', 'candidate']
+    'roles' => ['recruiter', 'candidate'],
+    
+    'role_can_create_posts_for_role' => [
+        'user' => ['recruiter', 'candidate'],
+    ]
 ];
