@@ -26,3 +26,4 @@ Route::group(['prefix' => 'resources', 'middleware' => config('faq.admin_middlew
     Route::get('/', 'ResourceController@show')->name('resources.show');
     Route::post('/upload', 'ResourceController@store')->name('resources.store');
 });
+Route::get('{other}', 'PostController@abort404');

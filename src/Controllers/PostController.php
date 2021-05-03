@@ -165,4 +165,9 @@ class PostController extends Controller
         
         return array_unique($postForRole);
     }
+
+    public function abort404()
+    {
+        abort(404);
+    }
 }
