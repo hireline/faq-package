@@ -40,6 +40,12 @@
                 <div class="input-field col s12">
                     <textarea id="post-content" name="body" class="materialize-textarea">{!! $post->body !!}</textarea>
                 </div>
+                <div class="input-field col s6">
+                    <label>Metadescripción</label>
+                </div>
+                <div class="input-field col s12">
+                    <textarea id="post-content" name="meta_description" class="materialize-textarea">{!! $post->meta_description !!}</textarea>
+                </div>
                 <div class="col s12 center-align">
                     <button class="waves-effect waves-light btn orange" type="submit">
                         Guardar
