@@ -13,7 +13,7 @@ class Post extends Model
     use Searchable;
 
     protected $table = 'faq_posts';
-    protected $fillable = ['title', 'body', 'active', 'slug', 'roles'];
+    protected $fillable = ['title', 'body', 'active', 'slug', 'roles' , 'meta_description'];
     protected $casts = ['roles' => 'array'];
 
     public function searchableAs()
