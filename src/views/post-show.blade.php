@@ -2,6 +2,9 @@
 @section('title')
     {{ $post->title }} - FAQ
 @endsection
+@section('meta-description')
+    <meta name="description" content="{{ $post->meta_description }}">
+@endsection
 @section('head-styles')
     <style>
         body{
